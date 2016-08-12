@@ -1,0 +1,27 @@
+{
+  "name": "wikiracer",
+  "version": "1.0.0",
+  "description": "Find the shortest path between starting and ending wikipedia links",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nismodao/WikiRacer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nismodao/WikiRacer/issues"
+  },
+  "homepage": "https://github.com/nismodao/WikiRacer#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cheerio": "^0.20.0",
+    "express": "^4.14.0",
+    "request": "^2.74.0",
+    "url-parser": "0.0.1"
+  }
+}
