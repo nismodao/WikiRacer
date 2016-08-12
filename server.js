@@ -6,6 +6,8 @@ var app          = express();
 var bodyParser   = require('body-parser');
 var fs           = require('fs');
 
+var filePath = __dirname + "/public" + "/page.txt";
+
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -111,7 +113,8 @@ function visitPage(url, callback) {
       console.log('found a match', url);
       console.log('path is', path);
       console.log('graph is', racer);
-      console.log(racer.hasEdge(start, 'https://en.wikipedia.org/wiki/moon'));
+      console.log(racer.hasEdge(start, 'https://en.wikipedia.org/wiki/Acutance'));
+      writeToFile(filePath, racer);
      } else {
        retrieveLinks($);
        callback();
@@ -120,14 +123,38 @@ function visitPage(url, callback) {
 }
 
 function retrieveLinks($) {
-  var links = $("a[href^='/']");
+  var links = $("a[href^='/wiki/']");
   // console.log('links', links);
   // console.log("Found " + links.length + " relative links on page");
-  links.each(function() {
-    pagesToVisit.push(baseUrl + $(this).attr('href'));
-    racer.addNode(baseUrl + $(this).attr('href'));
-    racer.addEdge(start, baseUrl + $(this).attr('href'));
+  links.each(function(index,value) {
+    if (!value.attribs.href.match(/\bwiki\/Category\b/)) {
+      console.log('value from retrieveLinks', value.attribs.href, 'index is', index)
+      pagesToVisit.push(baseUrl + value.attribs.href);
+      racer.addNode(baseUrl + value.attribs.href);
+      racer.addEdge(start, baseUrl + value.attribs.href);
+    }
   });
 }
 
+
+Graph.prototype.BFS = function() {
+  var queue = [];
+  var results = [];
+  var hasVisited = {};
+  queue.push({tree: this, depth: 0});
+  while (queue.length > 0) {
+    node = queue.pop();
+  return results;
+  };
+}
+
+function writeToFile(path, data) {
+  fs.writeFile(path, data, function(error) {
+    if (error) {
+     console.error("write error:  " + error.message);
+    } else {
+     console.log("Successful Write to " + path);
+    }
+  });
+}
 
