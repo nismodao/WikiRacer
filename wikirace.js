@@ -2,31 +2,24 @@ var request      = require('request');
 var cheerio      = require('cheerio');
 var URL          = require('url-parse');
 
-
 var args = JSON.parse(process.argv.slice(2));
 var start = args.start;
 var end = args.end;
 var LIMIT = 700;
 var hasVisited = {};
 var visitCount = 0;
-var linksQueue;
-var parentNode;
 var url = new URL(start);
 var baseUrl = url.protocol + "//" + url.hostname;
 var path = [];
 var currUrl;
 var $;
 var links;
-var flag;
+var trigger = false;
 
 
 function getLinks (currUrl, linksQueue, parentNode, visitCount, flag) {
-  console.log('flag from get links', flag);
-  if (flag) {
-    process.exit();
-  } 
   request(currUrl, function(error, response, body, flag) {
-    if (error) return console.log('error from download', error);
+    if (error) return console.log('error in requesting link');
     if(body && response.statusCode === 200) {
       $ = cheerio.load(body);
       links = $("a[href^='/wiki/']");
@@ -41,8 +34,11 @@ function getLinks (currUrl, linksQueue, parentNode, visitCount, flag) {
         }     
       }
     }
-    crawl(linksQueue, parentNode, flag); 
-    console.log("crawling...");
+    crawl(linksQueue, parentNode);
+    if (!trigger) {
+      console.log("wikiracer running, please sit tight...");
+      trigger = true;
+    } 
   });
 }
 
@@ -50,10 +46,6 @@ function crawl (linksQueue, parentNode, flag) {
   linksQueue = linksQueue || [start];
   parentNode = parentNode || null;
   flag = flag || false;
-
-  if (!!flag) {
-    return 'yo';
-  }
   while (linksQueue.length > 0 && visitCount < LIMIT && flag === false) {
     visitCount = 0;
     currUrl = linksQueue.shift();
@@ -61,8 +53,9 @@ function crawl (linksQueue, parentNode, flag) {
     path.push([currUrl, parentNode]);
     if (currUrl === end && flag === false) {
       flag = true;
-      console.log('target found');
-      return createPath(path, currUrl, start, end);
+      console.log('Sucess: Path found!');
+      createPath(path, currUrl, start, end);
+      process.exit();
     } else {
       getLinks(currUrl, linksQueue, parentNode, visitCount,flag);
     }    
