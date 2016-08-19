@@ -11,7 +11,7 @@ Example output: {"start":"https://en.wikipedia.org/wiki/BMW_M3","end":"https://e
 
 1.  Clone this repo
 2.  Run npm install
-3.  Run node wikiracer [JSON input]
+3.  Run node wikirace [JSON input]
 Example run:  
 
 node wikirace '{"start": "https://en.wikipedia.org/wiki/BMW_M3", "end": "https://en.wikipedia.org/wiki/Sicily"}'
