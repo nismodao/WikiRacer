@@ -5,9 +5,7 @@ var URL          = require('url-parse');
 var args = JSON.parse(process.argv.slice(2));
 var start = args.start;
 var end = args.end;
-var LIMIT = 700;
 var hasVisited = {};
-var visitCount = 0;
 var url = new URL(start);
 var baseUrl = url.protocol + "//" + url.hostname;
 var path = [];
@@ -16,16 +14,14 @@ var $;
 var links;
 var trigger = false;
 
-
-function getLinks (currUrl, linksQueue, parentNode, visitCount, flag) {
-  request(currUrl, function(error, response, body, flag) {
+function getLinks (currUrl, linksQueue, parentNode) {
+  request(currUrl, function(error, response, body) {
     if (error) return console.log('error in requesting link');
     if(body && response.statusCode === 200) {
       $ = cheerio.load(body);
       links = $("a[href^='/wiki/']");
       parentNode = currUrl;
       for (var i = 0; i < links.length; i++) {
-        visitCount++;
         if (!links[i].attribs.href.match(/\bwiki\/Category\b|\bwiki\/Portal\b|\bwiki\/Special\b|\bwiki\/Help\b|\bwiki\/Wikipedia\b|\bwiki\/Help\b|\bwiki\/Talk\b|\bwiki\/Main_Page\b|jpg|gif|svg/ig) &&
           !hasVisited[links[i].attribs.href]) {
           if (currUrl === end) console.log('match found from getLinks', currUrl);
@@ -42,27 +38,23 @@ function getLinks (currUrl, linksQueue, parentNode, visitCount, flag) {
   });
 }
 
-function crawl (linksQueue, parentNode, flag) {
+function crawl (linksQueue, parentNode) {
   linksQueue = linksQueue || [start];
   parentNode = parentNode || null;
-  flag = flag || false;
-  while (linksQueue.length > 0 && visitCount < LIMIT && flag === false) {
-    visitCount = 0;
+  while (linksQueue.length > 0) {
     currUrl = linksQueue.shift();
     hasVisited[currUrl] = true;
     path.push([currUrl, parentNode]);
-    if (currUrl === end && flag === false) {
-      flag = true;
+    if (currUrl === end) {
       console.log('Sucess: Path found!');
       createPath(path, currUrl, start, end);
       process.exit();
     } else {
-      getLinks(currUrl, linksQueue, parentNode, visitCount,flag);
+      getLinks(currUrl, linksQueue, parentNode);
     }    
   }
 }
   
-
 function createPath (path, target, start, end) {
   var result = {
     start: start,
