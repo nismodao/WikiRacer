@@ -1,7 +1,7 @@
 # WikiRacer
 This program will find the path between starting and ending wikipedia links.
 Input: JSON object with start and end links.
-Output: JSON object with start, end, and path values;
+Output: JSON object with start, end, and path values.
 
 Example input: '{"start": "https://en.wikipedia.org/wiki/BMW_M3", "end": "https://en.wikipedia.org/wiki/Sicily"}'
 
