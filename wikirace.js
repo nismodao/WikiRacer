@@ -24,7 +24,6 @@ function getLinks (currUrl, linksQueue, parentNode) {
       for (var i = 0; i < links.length; i++) {
         if (!links[i].attribs.href.match(/\bwiki\/Category\b|\bwiki\/Portal\b|\bwiki\/Special\b|\bwiki\/Help\b|\bwiki\/Wikipedia\b|\bwiki\/Help\b|\bwiki\/Talk\b|\bwiki\/Main_Page\b|jpg|gif|svg/ig) &&
           !hasVisited[links[i].attribs.href]) {
-          if (currUrl === end) console.log('match found from getLinks', currUrl);
           hasVisited[links[i].attribs.href] = true;
           linksQueue.push(baseUrl + links[i].attribs.href);
         }     
