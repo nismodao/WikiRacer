@@ -75,7 +75,6 @@ function createPath (path, target, start, end) {
   }
   result.path = route.reverse().slice(1);
   return console.log(JSON.stringify(result));
-
 }
 
 console.log(crawl());
